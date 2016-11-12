@@ -91,6 +91,8 @@ window.addEventListener("devicemotion", function(event){
         gyroPresent = true;
 });
 
+var camVector = new THREE.Vector3();
+
 
 var scene = new THREE.Scene();
 var consoleScene = new THREE.Scene();
@@ -266,7 +268,7 @@ function makeThing(type, position) {
 	things.push(new thing(type, position));
 }
 
-makeThing(player_type, new THREE.Vector3(0, -100, 0));
+makeThing(player_type, new THREE.Vector3(0, 0, 0));
 
 var scene_type = 0;
 var console_type = 1;
@@ -291,6 +293,9 @@ var letter = function(type, character, font) {
 	this.geometry;
 	this.geometry = getSmallTextGeometry(this.text);
 
+	this.waving = false;
+	this.wave = 0;
+
 	this.material = new THREE.MeshBasicMaterial({
 		color: 0x000000,
 		transparent: true,
@@ -310,6 +315,8 @@ var letter = function(type, character, font) {
 	this.sceneTick = 0;
 	this.sceneTickToForm = 100;
 	this.sceneArrived = false;
+
+	this.stuck = false;
 
 	
 	// snowflakes
@@ -332,6 +339,14 @@ letter.prototype.setDestination = function(x, y, z) {
 }
 
 letter.prototype.update = function() {
+	/*
+	if (this.text == "A") {
+		//this.free();
+		this.setPosition(camera.position.x, 100, 100);
+		this.speed = 0;
+		return;
+	}
+	*/
 	if (this.isFree) {
 		this.material.opacity -= 0.01;
 		if (this.material.opacity < 0.05) {
@@ -376,7 +391,7 @@ letter.prototype.update = function() {
 			this.sceneTick++;
 
 			if (this.sceneTickToForm <= 0) {
-				this.mesh.rotation.y = this.sceneTick * this.randomFactor * 0.01;
+				this.mesh.rotation.y = Math.PI - this.sceneTick * this.randomFactor * 0.01;
 
 				if (this.mesh.position.distanceTo(this.destination) < 2) {
 					this.sceneArrived = true;
@@ -401,6 +416,9 @@ var reserveY = 100;
 var currentReserveX = reserveX;
 var currentReserveY = reserveY;
 var reserveWidth = 150;
+var spikeBool = false;
+var spikeCounter = 0;
+var smallNoiseBool = false;
 
 function addReserveString(s, id) {
 	for (var i = 0; i < s.length; i++) {
@@ -475,7 +493,7 @@ function init(font) {
 
 	// ask the player to make a move
 }
-
+/*
 function addConsoleString(s) {
 	for (var i = 0; i < s.length; i++) {
 		if (s[i] != "\n") {
@@ -515,10 +533,16 @@ function addConsoleString(s) {
 		}
 	}
 }
-
+*/
 var tick = 0;
 
+var targetStr = "Phenylpropylaminopentane";
+
 function render() {
+
+	var target = targetStr.split("");
+	var counter = 0;
+	
 	requestAnimationFrame(render);
 
 	renderer.clear();
@@ -539,11 +563,15 @@ function render() {
 		camera.rotation.y += ((cameraYRotation + rotationY) - camera.rotation.y) / 20;
 	}
 	
-	/*
+	var camVector = new THREE.Vector3( 0, 0, - 1 );
+	//camVector.applyQuaternion( camera.quaternion );
+
+	camera.getWorldDirection(camVector);
+
 	for (var iter = 0; iter < 1; iter++) {
 		var flake = new letter(console_type, "abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * 26)], font);
 		flake.isSnowflake = true;
-		flake.setPosition(Math.random() * 1600, 300, Math.random() * 1600 - 800;
+		flake.setPosition(Math.random() * 1600 - 800, Math.random() * 1000, Math.random() * 1600 - 800);
 		flake.setDestination(flake.position.x + Math.random() * 100 - 50, -200, flake.position.z + Math.random() * 100 - 50);
 		flake.speed = 2;
 
@@ -563,19 +591,19 @@ function render() {
 		scene.add(flake.mesh);
 		consoleLetters.push(flake);
 	}
-	*/
-
+	
+	
 	for (var i = 0; i < consoleLetters.length; i++) {
 		var l = consoleLetters[i];
 		if (l.isDead) {
 			scene.remove(l.mesh);
 			consoleLetters.splice(i, 1);
 		}
-		/*
+		
 		if (l.isSnowflake && l.position.y < -100) {
 			l.free();
 		}
-		*/
+		
 		
 		l.update();
 	}
@@ -606,9 +634,64 @@ function render() {
 			{
 				l.free();
 			}
+		} else if (target.length > 0 && l.text == target[0]) {
+			var t = things[l.thingID];
+			if (t.isBlob) {
+				target.shift();
+				counter++;
+				//console.log(target.toString());
+				var extra = (targetStr.length * 3 / 2) - (3 * counter)
+
+				var targetVector = new THREE.Vector3(camVector.x * 75 + extra * Math.PI / 180, camVector.y * 75, camVector.z * 75 + extra * Math.PI / 180);
+				targetVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), extra * Math.PI / 180);
+
+				var targetVectorAngle = -1 * Math.atan2(targetVector.y, targetVector.x);
+
+				l.setDestination(targetVector.x, targetVector.y, targetVector.z);
+				l.mesh.rotation.y = targetVectorAngle;
+				console.log(l.mesh.rotation);
+				l.randomFactor = 0;
+				l.sceneArrived = false;
+			}
+		}
+		//Creates spike and disperses after a certain number of cycles
+		var vect =  l.position;
+		currentDirect = l.destination;
+		var lowerBoundX = -100; //Hardcoded rectangular bounds for spike
+		var higherBoundX = -50;
+		var lowerBoundZ = -100;
+		var higherBoundZ = -50;
+		if ((vect.x>lowerBoundX) && (vect.x<higherBoundX) &&
+		         (vect.z>lowerBoundZ) && (vect.z<higherBoundZ) &&
+		         spikeBool)
+		{
+			var midX = (lowerBoundX+higherBoundX)/2;
+			var midZ = (lowerBoundZ+higherBoundZ)/2;
+			l.setDestination(midX,10,midZ);
+			spikeCounter+=1;
+			if (spikeCounter>3000){
+				spikeCounter = 0;
+				spikeBool = false;
+			}
+		}
+		var offset = 100; //Slightly wider bound
+		//Continously creates waves until pressed again...letters however disperse after cycle counter
+		if (((vect.x>lowerBoundX-offset) && (vect.x<higherBoundX+offset) &&
+		    (vect.z>lowerBoundZ-offset) && (vect.z<higherBoundZ+offset) &&
+		         smallNoiseBool) || l.waving)
+		{ //Wave generator
+			l.setDestination(vect.x+10,vect.y+20*Math.cos(l.wave),currentDirect.z);
+			l.wave+=Math.PI/50;
+			l.waveCounter+=1;
+			//console.log("Testing sin wave");
+			if (l.waveCounter>1000){
+				l.waveCounter = 0;
+				l.waving = false;
+			}
 		} else if (l.sceneArrived) {
 			var t = things[l.thingID];
 			if (t.isBlob) {
+				l.randomFactor = Math.random() - 0.5;
 				var newDest = t.assignNewDestination();
 				l.setDestination(newDest.x, newDest.y, newDest.z);
 				l.sceneArrived = false;
@@ -621,8 +704,22 @@ function render() {
 
 render();
 
-// TODO bind to gyro
 $("body").on("mousemove", function(event) {
-	rotationY = -(event.pageX - window.innerWidth / 2) * 0.001;
-	rotationX = -(event.pageY - window.innerHeight / 2) * 0.001;
+	rotationY = -(event.pageX - window.innerWidth / 2) * 0.01;
+	rotationX = -(event.pageY - window.innerHeight / 2) * 0.01;
 });
+
+$("body").bind("keypress", function(event) {		
+ 	if (event.which == 97) {		
+ 		targetStr = "Phenylpropylaminopentane";
+ 	} else if (event.which == 98) {		
+ 		targetStr = "Pen Pineapple Apple Pen";
+ 	} else if (event.which == 99) {		
+ 		targetStr = "Lucy pls";
+ 	} else if (event.which == 32){ //Press Space to see spike
+ 		spikeBool = !spikeBool;
+ 	}  else if (event.which == 122){
+ 		console.log("Z key Pressed");
+ 		smallNoiseBool = !smallNoiseBool;
+ 	}
+ })
