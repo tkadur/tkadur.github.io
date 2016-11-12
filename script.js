@@ -224,10 +224,14 @@ var thing = function(type, position) {
 	this.positions = [];
 	this.colors = [];
 
-	this.numLettersRequired = 3500;
+	if (gyroPresent) {
+		this.numLetters = 1500;
+	} else {
+		this.numLettersRequired = 3500;
+	}
 	this.isBlob = true;
 	
-	for (var x = 0; x < 3500; x++) {
+	for (var x = 0; x < this.numLettersRequired; x++) {
 		var vec = new THREE.Vector3(
 			Math.random() * 30 - 15,
 			Math.random() * 30 - 15,
