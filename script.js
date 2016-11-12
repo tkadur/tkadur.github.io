@@ -155,10 +155,6 @@ recognition.onresult = function(event) { //the event holds the results
 
 //button that starts the listener
 
-   function startButton(event) {
-    recognition.start();
-    start_img.src = 'https://speechlogger.appspot.com/images/micslash2.png'; //We change the image to a slashed until the user approves the browser to listen and recognition actually starts. Then – we’ll change the image to ‘mic on’.
-};
 
 
 
@@ -611,6 +607,8 @@ var tick = 0;
 
 var targetStr = "";
 
+recognition.start();
+
 function render() {
 
 	targetStr = final_transcript;
@@ -790,7 +788,7 @@ $("body").on("mousemove", function(event) {
 
 $("body").bind("keypress", function(event) {		
  	if (event.which == 97) {		
- 		recognition.start();
+ 		
  	} else if (event.which == 98) {	
  		console.log(final_transcript);	
  		targetStr = final_transcript;
