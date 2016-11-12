@@ -98,6 +98,7 @@ var interim_transcript = '';
 //make sure api is supported by browser
 if (!('webkitSpeechRecognition' in window)) {
     //Speech API not supported here…
+    alert("This won't work here");
 } else { //Let’s do some cool stuff :)
     var recognition = new webkitSpeechRecognition(); //That is the object that will manage our whole recognition process. 
     recognition.continuous = true;   //Suitable for dictation. 
@@ -127,6 +128,7 @@ recognition.onresult = function(event) { //the event holds the results
     if (typeof(event.results) === 'undefined') { //Something is wrong…
         final_transcript = '';
         console.log('undefined');
+        alert('undefined');
         return;
     }
 
@@ -794,7 +796,7 @@ $("body").bind("keypress", function(event) {
  		console.log(final_transcript);	
  		targetStr = final_transcript;
  	} else if (event.which == 99) {		
- 		recognition.stop();
+ 		//recognition.stop();
  	} else if (event.which == 32){ //Press Space to see spike
  		spikeBool = !spikeBool;
  	}  else if (event.which == 122){
