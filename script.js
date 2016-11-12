@@ -91,6 +91,79 @@ window.addEventListener("devicemotion", function(event){
         gyroPresent = true;
 });
 
+var final_transcript = '';
+var interim_transcript = '';
+//var resetSentence = 0;
+// start speech
+//make sure api is supported by browser
+if (!('webkitSpeechRecognition' in window)) {
+    //Speech API not supported here…
+} else { //Let’s do some cool stuff :)
+    var recognition = new webkitSpeechRecognition(); //That is the object that will manage our whole recognition process. 
+    recognition.continuous = true;   //Suitable for dictation. 
+    recognition.interimResults = true;  //If we want to start receiving results even if they are not final.
+    //Define some more additional parameters for the recognition:
+    recognition.lang = "en-US"; 
+    recognition.maxAlternatives = 1; //Since from our experience, the highest result is really the best...
+}
+
+//what should happen while the voice is being processed
+recognition.onstart = function() {
+    //Listening (capturing voice from audio input) started.
+    //This is a good place to give the user visual feedback about that (i.e. flash a red light, etc.)
+};
+
+recognition.onend = function() {
+    //Again – give the user feedback that you are not listening anymore. If you wish to achieve continuous recognition – you can write a script to start the recognizer again here.
+final_transcript = '';
+console.log('Speech recognition service disconnected');
+recognition.start();
+
+};
+
+
+recognition.onresult = function(event) { //the event holds the results
+//Yay – we have results! Let’s check if they are defined and if final or not:
+    if (typeof(event.results) === 'undefined') { //Something is wrong…
+        final_transcript = '';
+        console.log('undefined');
+        return;
+    }
+
+ 
+ 	for (var i = event.resultIndex; i < event.results.length; ++i) {
+ 		console.log("Running")
+      if (event.results[i].isFinal) {
+
+      	if(final_transcript.length > 15)
+      	{
+      		final_transcript = '';
+      	}
+
+        final_transcript += event.results[i][0].transcript;
+        console.log("Final:" + final_transcript);
+
+      } else {
+        interim_transcript += event.results[i][0].transcript;
+        console.log("Interim:" + interim_transcript);
+      }
+    }
+
+}; 
+
+ 
+
+//button that starts the listener
+
+   function startButton(event) {
+    recognition.start();
+    start_img.src = 'https://speechlogger.appspot.com/images/micslash2.png'; //We change the image to a slashed until the user approves the browser to listen and recognition actually starts. Then – we’ll change the image to ‘mic on’.
+};
+
+
+
+
+
 var camVector = new THREE.Vector3();
 
 
@@ -536,9 +609,11 @@ function addConsoleString(s) {
 */
 var tick = 0;
 
-var targetStr = "Phenylpropylaminopentane";
+var targetStr = "";
 
 function render() {
+
+	targetStr = final_transcript;
 
 	var target = targetStr.split("");
 	var counter = 0;
@@ -608,6 +683,12 @@ function render() {
 		l.update();
 	}
 
+	for (var i = 0; i < target.length; i++) {
+		var tmp = sceneLetters.shift();
+		tmp.text = target[i];
+		sceneLetters.unshift(tmp);
+	}
+
 	for (var i = 0; i < sceneLetters.length; i++) {
 		var l = sceneLetters[i];
 		if (l.isDead) {
@@ -645,11 +726,9 @@ function render() {
 				var targetVector = new THREE.Vector3(camVector.x * 75 + extra * Math.PI / 180, camVector.y * 75, camVector.z * 75 + extra * Math.PI / 180);
 				targetVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), extra * Math.PI / 180);
 
-				var targetVectorAngle = -1 * Math.atan2(targetVector.y, targetVector.x);
-
 				l.setDestination(targetVector.x, targetVector.y, targetVector.z);
-				l.mesh.rotation.y = targetVectorAngle;
-				console.log(l.mesh.rotation);
+				l.mesh.rotation.y = 0;
+				//console.log(l.mesh.rotation);
 				l.randomFactor = 0;
 				l.sceneArrived = false;
 			}
@@ -711,11 +790,12 @@ $("body").on("mousemove", function(event) {
 
 $("body").bind("keypress", function(event) {		
  	if (event.which == 97) {		
- 		targetStr = "Phenylpropylaminopentane";
- 	} else if (event.which == 98) {		
- 		targetStr = "Pen Pineapple Apple Pen";
+ 		recognition.start();
+ 	} else if (event.which == 98) {	
+ 		console.log(final_transcript);	
+ 		targetStr = final_transcript;
  	} else if (event.which == 99) {		
- 		targetStr = "Lucy pls";
+ 		recognition.stop();
  	} else if (event.which == 32){ //Press Space to see spike
  		spikeBool = !spikeBool;
  	}  else if (event.which == 122){
