@@ -114,13 +114,13 @@ var camera = new THREE.PerspectiveCamera(
 
 var controls;
 controls = new THREE.DeviceOrientationControls( camera );
-
+/*
 var consoleCamera = new THREE.PerspectiveCamera(
 	75,
 	window.innerWidth / window.innerHeight,
 	0.1,
 	500);
-
+*/
 // http://stackoverflow.com/a/29269912/1517227
 var renderer = new THREE.WebGLRenderer({
 	antialias: true
@@ -142,7 +142,7 @@ var negativeX = 1;
 var positiveZ = 2;
 var positiveX = 3;
 
-var cameraDistance = 300;
+var cameraDistance = 0;
 var cameraDir = 0;
 var cameraYRotation = 0;
 var cameraPosition = new THREE.Vector3(0, 0, cameraDistance);
@@ -150,7 +150,7 @@ var rotationX = 0;
 var rotationY = 0;
 
 camera.position.z = cameraDistance;
-consoleCamera.position.z = cameraDistance;
+//consoleCamera.position.z = cameraDistance;
 
 var font;
 var fontLoader = new THREE.FontLoader();
@@ -283,7 +283,7 @@ var letter = function(type, character, font) {
 	this.position = new THREE.Vector3(0, 0, 0);
 	this.velocity = new THREE.Vector3(0, 0, 0);
 	this.destination = new THREE.Vector3(0, 0, 0);
-	this.speed = Math.random() * 1 + 2;
+	this.speed = Math.random() * 1 + 1.5;
 
 	this.isFree = false;
 	this.isDead = false;
@@ -522,10 +522,12 @@ function render() {
 	requestAnimationFrame(render);
 
 	renderer.clear();
+	/*
 	renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
 	renderer.render(consoleScene, consoleCamera);
 
 	renderer.clearDepth();
+	*/
 	renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
 	renderer.render(scene, camera);
 
