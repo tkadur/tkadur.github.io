@@ -225,7 +225,7 @@ var thing = function(type, position) {
 	this.colors = [];
 
 	if (gyroPresent) {
-		this.numLetters = 1500;
+		this.numLettersRequired = 1500;
 	} else {
 		this.numLettersRequired = 3500;
 	}
