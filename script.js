@@ -610,9 +610,10 @@ var tick = 0;
 var targetStr = "";
 
 
+recognition.start();
 
 function render() {
-	recognition.start();
+	
 
 	targetStr = final_transcript;
 
