@@ -331,9 +331,9 @@ var thing = function(type, position) {
 	this.colors = [];
 
 	if (gyroPresent) {
-		this.numLettersRequired = 500;
+		this.numLettersRequired = 100;
 	} else {
-		this.numLettersRequired = 3500;
+		this.numLettersRequired = 500;
 	}
 	this.isBlob = true;
 	
@@ -362,9 +362,9 @@ thing.prototype.assignNewDestination = function() {
 
 	if (gyroPresent) {
 		return new THREE.Vector3(
-		Math.random() * 500 - 250,
+		Math.random() * 100 - 50,
 		Math.random() * 35 - 55,
-		Math.random() * 500 - 250
+		Math.random() * 100 - 50
 	);
 	}
 
