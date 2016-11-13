@@ -140,8 +140,8 @@ if (!('webkitSpeechRecognition' in window)) {
 	    //Again – give the user feedback that you are not listening anymore. If you wish to achieve continuous recognition – you can write a script to start the recognizer again here.
 	//final_transcript = '';
 	recognizing = false;
-	if (ignore_onend) { return; }
-	if (!final_transcript) {return;}
+	//if (ignore_onend) { return; }
+	//if (!final_transcript) {return;}
 	console.log('Speech recognition service disconnected');
 	alert("stopped!");
 	recognition.start();
