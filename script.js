@@ -127,7 +127,7 @@ if (!('webkitSpeechRecognition' in window)) {
 		if (event.error == 'audio-capture') {
 			alert("No mic!");
 			ignore_onend = true;
-		}
+		}-
 		if (event.error == 'not-allowed') {
 			alert("No access!");
 			ignore_onend = true;
@@ -143,7 +143,7 @@ if (!('webkitSpeechRecognition' in window)) {
 	if (!final_transcript) {return;}
 	console.log('Speech recognition service disconnected');
 	alert("stopped!");
-	//recognition.start();
+	recognition.start();
 
 	};
 
