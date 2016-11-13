@@ -726,7 +726,6 @@ function render() {
 		    (vect.z>lowerBoundZ-offset) && (vect.z<higherBoundZ+offset) && smallNoiseBool))
 		{ //Wave generator
 			l.setDestination(vect.x+10,vect.y+globalAmplitude*Math.cos(l.wave),currentDirect.z);
-			l.frozen = false;
 			l.wave+=Math.PI/50;
 			l.waveCounter+=1;
 			//console.log("Testing sin wave");
@@ -740,6 +739,7 @@ function render() {
 			if (t.isBlob) {
 				l.wave = 0;
 				l.waveCounter = 0;
+				l.frozen = false;
 				//l.randomFactor = Math.random() - 0.5;
 				var newDest = t.assignNewDestination();
 				l.setDestination(newDest.x, newDest.y, newDest.z);
