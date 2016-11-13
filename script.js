@@ -116,7 +116,7 @@ recognition.onstart = function() {
 
 recognition.onend = function() {
     //Again – give the user feedback that you are not listening anymore. If you wish to achieve continuous recognition – you can write a script to start the recognizer again here.
-final_transcript = '';
+//final_transcript = '';
 console.log('Speech recognition service disconnected');
 recognition.start();
 
@@ -619,6 +619,7 @@ function render() {
 
 	var target = targetStr.split("");
 	var counter = 0;
+	var vc = 0;
 	
 	requestAnimationFrame(render);
 
@@ -641,7 +642,7 @@ function render() {
 	}
 	
 	var camVector = new THREE.Vector3( 0, 0, - 1 );
-	//camVector.applyQuaternion( camera.quaternion );
+	camVector.applyQuaternion( camera.quaternion );
 
 	camera.getWorldDirection(camVector);
 
@@ -722,14 +723,16 @@ function render() {
 			if (t.isBlob) {
 				target.shift();
 				counter++;
+
+				if (counter > 10) { counter = 0; vc++; }
 				//console.log(target.toString());
 				var extra = (targetStr.length * 3 / 2) - (3 * counter)
 
-				var targetVector = new THREE.Vector3(camVector.x * 75 + extra * Math.PI / 180, camVector.y * 75, camVector.z * 75 + extra * Math.PI / 180);
+				var targetVector = new THREE.Vector3(camVector.x * 75, (camVector.y * 75) - 10 * vc, camVector.z * 75);
 				targetVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), extra * Math.PI / 180);
 
 				l.setDestination(targetVector.x, targetVector.y, targetVector.z);
-				l.mesh.rotation.y = 0;
+				//l.mesh.rotation.y = Math.PI;
 				//console.log(l.mesh.rotation);
 				l.randomFactor = 0;
 				l.sceneArrived = false;
