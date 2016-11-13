@@ -100,7 +100,7 @@ var interim_transcript = '';
 //make sure api is supported by browser
 if (!('webkitSpeechRecognition' in window)) {
     //Speech API not supported here…
-    alert("This won't work here");
+    //alert("This won't work here");
 } else { //Let’s do some cool stuff :)
     var recognition = new webkitSpeechRecognition(); //That is the object that will manage our whole recognition process. 
     recognition.continuous = true;   //Suitable for dictation. 
@@ -131,13 +131,6 @@ recognition.onerror=function() {
 
 recognition.onresult = function(event) { //the event holds the results
 //Yay – we have results! Let’s check if they are defined and if final or not:
-    if (typeof(event.results) === 'undefined') { //Something is wrong…
-        final_transcript = '';
-        console.log('undefined');
-        alert('undefined');
-        return;
-    }
-
  	for (var i = event.resultIndex; i < event.results.length; ++i) {
  		console.log("Running")
       if (event.results[i].isFinal) {
@@ -165,7 +158,7 @@ var camVector = new THREE.Vector3();
 
 var scene = new THREE.Scene();
 var consoleScene = new THREE.Scene();
-
+/*
 var platform_geo, platform_material, platform_mesh;
 
 var platformAdded = false;
@@ -176,7 +169,7 @@ platform_geo = new THREE.BoxGeometry(100, 10, 100);
 platform_mesh = new THREE.Mesh(platform_geo, platform_material);
 
 platform_mesh.position.set(1600, -150, 0);
-
+*/
 var camera = new THREE.PerspectiveCamera(
 	75,
 	window.innerWidth / window.innerHeight,
@@ -742,6 +735,20 @@ function render() {
 
 render();
 
+$(document).ready(function() {
+
+  if (navigator.userAgent.match(/Android/i)) {
+    window.scrollTo(0,0); // reset in case prev not scrolled  
+    var nPageH = $(document).height();
+    var nViewH = window.outerHeight;
+    if (nViewH > nPageH) {
+      nViewH -= 250;
+      $('BODY').css('height',nViewH + 'px');
+    }
+    window.scrollTo(0,1);
+  }
+
+});
 $("body").on("mousemove", function(event) {
 	rotationY = -(event.pageX - window.innerWidth / 2) * 0.01;
 	rotationX = -(event.pageY - window.innerHeight / 2) * 0.01;
