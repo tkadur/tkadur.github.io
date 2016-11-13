@@ -121,15 +121,15 @@ if (!('webkitSpeechRecognition' in window)) {
 
 	recognition.onerror= function(event) {
 		if (event.error == 'no-speech') {
-			alert("No speech!");
+			//alert("No speech!");
 			ignore_onend = true;
 		}
 		if (event.error == 'audio-capture') {
-			alert("No mic!");
+			//alert("No mic!");
 			ignore_onend = true;
-		}-
+		}
 		if (event.error == 'not-allowed') {
-			alert("No access!");
+			//alert("No access!");
 			ignore_onend = true;
 		}
 		recognition.start();
