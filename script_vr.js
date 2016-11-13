@@ -305,7 +305,7 @@ function getFormerString(type) {
 }
 
 var things = [];
-var encounters = [false]; // length = # of types of things
+//var encounters = [false]; // length = # of types of things
 
 function shuffle(a) {
     var j, x, i;
@@ -331,7 +331,7 @@ var thing = function(type, position) {
 	this.colors = [];
 
 	if (gyroPresent) {
-		this.numLettersRequired = 100;
+		this.numLettersRequired = 500;
 	} else {
 		this.numLettersRequired = 500;
 	}
@@ -358,14 +358,6 @@ var thing = function(type, position) {
 thing.prototype.assignNewDestination = function() {
 	if (!this.isBlob) {
 		return;
-	}
-
-	if (gyroPresent) {
-		return new THREE.Vector3(
-		Math.random() * 100 - 50,
-		Math.random() * 35 - 55,
-		Math.random() * 100 - 50
-	);
 	}
 
 	return new THREE.Vector3(
@@ -432,7 +424,7 @@ var letter = function(type, character, font) {
 
 	
 	// snowflakes
-	this.isSnowflake = false;
+	//this.isSnowflake = false;
 	
 }
 
@@ -560,17 +552,19 @@ function checkDisplayAndStuff() {
 		if (i == 0 || dist <= visibility * visibility) {
 			t.isDisplayed = true;
 
+			/*
 			if (!encounters[t.type]) {
 				encounters[t.type] = true;
 			}
+			*/
 
 			if (!t.isFormed) {
 				t.isFormed = true;
 				var numLetters = t.numLettersRequired;
-				var numLettersPerString = getFormerString(t.type).length;
+				var numLettersPerString = allString.length;
 				var numStrings = Math.ceil(numLetters / numLettersPerString);
 				for (var x = 0; x < numStrings; x++) {
-					addReserveString(getFormerString(t.type), t.ID);
+					addReserveString(allString, t.ID);
 				}
 			}
 		} else {
@@ -662,6 +656,7 @@ function render() {
 
 	camera.getWorldDirection(camVector);
 
+	/*
 	for (var iter = 0; iter < 1; iter++) {
 		var flake = new letter(console_type, "abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * 26)], font);
 		flake.isSnowflake = true;
@@ -686,7 +681,7 @@ function render() {
 		consoleLetters.push(flake);
 	}
 	
-	
+	*/
 	for (var i = 0; i < consoleLetters.length; i++) {
 		var l = consoleLetters[i];
 		if (l.isDead) {
@@ -694,9 +689,11 @@ function render() {
 			consoleLetters.splice(i, 1);
 		}
 		
+		/*
 		if (l.isSnowflake && l.position.y < -100) {
 			l.free();
 		}
+		*/
 		
 		
 		l.update();
