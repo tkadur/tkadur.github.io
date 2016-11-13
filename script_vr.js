@@ -622,7 +622,7 @@ function render() {
 	var timeout;
 
 	if (gyroPresent) {
-		timeout = 15000;
+		timeout = 25000;
 	} else {
 		timeout = 10000;
 	}
