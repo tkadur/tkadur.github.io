@@ -430,7 +430,7 @@ var letter = function(type, character, font) {
 
 	
 	// snowflakes
-	//this.isSnowflake = false;
+	this.isSnowflake = false;
 	
 }
 
@@ -664,7 +664,7 @@ function render() {
 
 	camera.getWorldDirection(camVector);
 
-	/*
+	
 	for (var iter = 0; iter < 1; iter++) {
 		var flake = new letter(console_type, "abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * 26)], font);
 		flake.isSnowflake = true;
@@ -689,7 +689,7 @@ function render() {
 		consoleLetters.push(flake);
 	}
 	
-	*/
+	
 	for (var i = 0; i < consoleLetters.length; i++) {
 		var l = consoleLetters[i];
 		if (l.isDead) {
@@ -697,11 +697,10 @@ function render() {
 			consoleLetters.splice(i, 1);
 		}
 		
-		/*
+		
 		if (l.isSnowflake && l.position.y < -100) {
 			l.free();
 		}
-		*/
 		
 		
 		l.update();
@@ -833,8 +832,8 @@ $("body").bind("keypress", function(event) {
  	if (event.which == 97) {		
  		
  	} else if (event.which == 98) {	
- 		console.log(final_transcript);	
- 		targetStr = final_transcript;
+ 		//console.log(final_transcript);	
+ 		//targetStr = final_transcript;
  	} else if (event.which == 99) {		
  		//recognition.stop();
  	} else if (event.which == 32){ //Press Space to see spike
