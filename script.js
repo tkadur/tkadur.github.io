@@ -143,6 +143,7 @@ recognition.onresult = function(event) { //the event holds the results
       	}
 
         final_transcript += event.results[i][0].transcript;
+        interim_transcript = '';
         console.log("Final:" + final_transcript);
 
       } else {
