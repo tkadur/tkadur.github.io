@@ -93,6 +93,7 @@ window.addEventListener("devicemotion", function(event){
 
 var final_transcript = '';
 var interim_transcript = '';
+var ignore_onend = false;
 //var resetSentence = 0;
 // start speech
 //make sure api is supported by browser
@@ -112,13 +113,17 @@ if (!('webkitSpeechRecognition' in window)) {
 recognition.onstart = function() {
     //Listening (capturing voice from audio input) started.
     //This is a good place to give the user visual feedback about that (i.e. flash a red light, etc.)
+    recognizing = true;
+    showInfo('info_speak_now');
+    ignore_onend = true;
 };
 
 recognition.onend = function() {
     //Again – give the user feedback that you are not listening anymore. If you wish to achieve continuous recognition – you can write a script to start the recognizer again here.
 //final_transcript = '';
+if (ignore_onend) { return; }
 console.log('Speech recognition service disconnected');
-recognition.start();
+//recognition.start();
 
 };
 
@@ -151,6 +156,7 @@ recognition.onresult = function(event) { //the event holds the results
         console.log("Interim:" + interim_transcript);
       }
     }
+    ignore_onend = false;
 
 }; 
 
