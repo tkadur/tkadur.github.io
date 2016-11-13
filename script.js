@@ -138,8 +138,6 @@ recognition.onresult = function(event) { //the event holds the results
         return;
     }
 
- 	alert(event.results);
-
  	for (var i = event.resultIndex; i < event.results.length; ++i) {
  		console.log("Running")
       if (event.results[i].isFinal) {
