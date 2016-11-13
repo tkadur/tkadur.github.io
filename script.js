@@ -84,49 +84,6 @@ THREE.DeviceOrientationControls = function ( object ) {
         this.connect();
  
 };
-THREE.StereoEffect = function ( renderer ) {
-
-	var _stereo = new THREE.StereoCamera();
-	_stereo.aspect = 0.5;
-
-	this.setEyeSeparation = function ( eyeSep ) {
-
-		_stereo.eyeSep = eyeSep;
-
-	};
-
-	this.setSize = function ( width, height ) {
-
-		renderer.setSize( width, height );
-
-	};
-
-	this.render = function ( scene, camera ) {
-
-		scene.updateMatrixWorld();
-
-		if ( camera.parent === null ) camera.updateMatrixWorld();
-
-		_stereo.update( camera );
-
-		var size = renderer.getSize();
-
-		if ( renderer.autoClear ) renderer.clear();
-		renderer.setScissorTest( true );
-
-		renderer.setScissor( 0, 0, size.width / 2, size.height );
-		renderer.setViewport( 0, 0, size.width / 2, size.height );
-		renderer.render( scene, _stereo.cameraL );
-
-		renderer.setScissor( size.width / 2, 0, size.width / 2, size.height );
-		renderer.setViewport( size.width / 2, 0, size.width / 2, size.height );
-		renderer.render( scene, _stereo.cameraR );
-
-		renderer.setScissorTest( false );
-
-	};
-
-};
 
 var timer = 0;
 
@@ -222,9 +179,6 @@ var camera = new THREE.PerspectiveCamera(
 var controls;
 controls = new THREE.DeviceOrientationControls( camera );
 
- controls.noZoom = true;
-      controls.noPan = true;
-
 // http://stackoverflow.com/a/29269912/1517227
 var renderer = new THREE.WebGLRenderer({
 	antialias: true
@@ -234,7 +188,6 @@ renderer.autoClear = false;
 renderer.setSize(
 	window.innerWidth,
 	window.innerHeight);
-effect = new THREE.StereoEffect(renderer);
 document.body.appendChild(renderer.domElement);
 
 var dirLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -612,8 +565,6 @@ var targetStr = "";
 
 recognition.start();
 
-var clock = new THREE.Clock();
-
 function render() {
 	
 	var timeout;
@@ -634,19 +585,15 @@ function render() {
 	
 	requestAnimationFrame(render);
 
-	//effect.clear();
+	renderer.clear();
 	/*
 	renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
 	renderer.render(consoleScene, consoleCamera);
 
 	renderer.clearDepth();
 	*/
-	//effect.setViewport(0, 0, window.innerWidth, window.innerHeight);
-	//renderer.render(scene, camera);
-
-	//update(clock.getDelta());
-	//effect.render(clock.getDelta());
-	effect.render(scene, camera);
+	renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
+	renderer.render(scene, camera);
 
 	tick++;
 	if (gyroPresent) {
