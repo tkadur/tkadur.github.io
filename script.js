@@ -132,6 +132,7 @@ if (!('webkitSpeechRecognition' in window)) {
 			alert("No access!");
 			ignore_onend = true;
 		}
+		this.start();
 	}
 
 
@@ -143,7 +144,7 @@ if (!('webkitSpeechRecognition' in window)) {
 	if (!final_transcript) {return;}
 	console.log('Speech recognition service disconnected');
 	alert("stopped!");
-	recognition.start();
+	this.start();
 
 	};
 
