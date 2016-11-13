@@ -691,7 +691,7 @@ function render() {
 				var extra = - (3 * counter)
 
 				var targetVector = new THREE.Vector3(camVector.x * 75, camVector.y * 75 - 10 * vc, camVector.z * 75);
-				targetVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), extra * Math.PI / 180 + Math.PI / 8);
+				targetVector.applyAxisAngle(new THREE.Vector3(0, 1, 0), extra * Math.PI / 180 + Math.PI / 4);
 				targetVector.applyAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 36);
 
 				l.setDestination(targetVector.x, targetVector.y, targetVector.z);
