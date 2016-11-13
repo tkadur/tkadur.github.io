@@ -223,7 +223,7 @@ var controls;
 controls = new THREE.DeviceOrientationControls( camera );
 
  controls.noZoom = true;
-      controls.noPan = true;
+ controls.noPan = true;
 
 // http://stackoverflow.com/a/29269912/1517227
 var renderer = new THREE.WebGLRenderer({
@@ -232,11 +232,17 @@ var renderer = new THREE.WebGLRenderer({
 renderer.setClearColor(0xffffff);
 renderer.autoClear = true;
 renderer.setSize(
-	window.innerWidth,
-	window.innerHeight);
+	1280,
+	720);
 effect = new THREE.StereoEffect(renderer);
 //effect.setClearColor(0xffffff);
 document.body.appendChild(renderer.domElement);
+
+var wscale = window.innerWidth / 1280;
+var hscale = window.innerHeight / 720;
+
+renderer.domElement.style.width = renderer.domElement.width * wscale + 'px';
+renderer.domElement.style.height = renderer.domElement.height * hscale + 'px';
 
 var dirLight = new THREE.DirectionalLight(0xffffff, 1);
 dirLight.position.set(100, 100, 50);
@@ -548,8 +554,8 @@ function checkDisplayAndStuff() {
 	
 	for (var i = 0; i < things.length; i++) {
 		var t = things[i];
-		var dist = t.position.distanceToSquared(player.position);
-		if (i == 0 || dist <= visibility * visibility) {
+		//var dist = t.position.distanceToSquared(player.position);
+		//if (i == 0 || dist <= visibility * visibility) {
 			t.isDisplayed = true;
 
 			/*
@@ -567,6 +573,7 @@ function checkDisplayAndStuff() {
 					addReserveString(allString, t.ID);
 				}
 			}
+		/*
 		} else {
 			t.isDisplayed = false;
 			if (t.isFormed) {
@@ -580,9 +587,10 @@ function checkDisplayAndStuff() {
 				t.numLettersFormed = 0;
 			}
 		}
+		*/
 	}
 	
-	playerReadyToMove = true;
+	//playerReadyToMove = true;
 }
 
 function init(font) {
