@@ -1,4 +1,4 @@
-THREE.DeviceOrientationControls = function ( object ) {
+/*THREE.DeviceOrientationControls = function ( object ) {
  
         var scope = this;
  
@@ -84,6 +84,7 @@ THREE.DeviceOrientationControls = function ( object ) {
         this.connect();
  
 };
+*/
 
 var timer = 0;
 
@@ -178,6 +179,8 @@ var camera = new THREE.PerspectiveCamera(
 
 var controls;
 controls = new THREE.DeviceOrientationControls( camera );
+controls.noPan = true;
+controls.noZoom = true;
 
 // http://stackoverflow.com/a/29269912/1517227
 var renderer = new THREE.WebGLRenderer({
@@ -189,6 +192,8 @@ renderer.setSize(
 	window.innerWidth,
 	window.innerHeight);
 document.body.appendChild(renderer.domElement);
+
+effect = new THREE.StereoEffect(renderer);
 
 var dirLight = new THREE.DirectionalLight(0xffffff, 1);
 dirLight.position.set(100, 100, 50);
@@ -570,7 +575,7 @@ function render() {
 	var timeout;
 
 	if (gyroPresent) {
-		timeout = 30000;
+		timeout = 15000;
 	} else {
 		timeout = 10000;
 	}
